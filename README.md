@@ -136,6 +136,7 @@ Pros:
 - Interacts directly with etcd
 - Changes don't need a restart
 - No config files needed
+
 Cons:
 - Still beta
 - No heavy development visible
