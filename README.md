@@ -132,4 +132,4 @@ Then access to `example.com` and you can see the current version _2.0.0_ .
 If you're sitting behind a proxy you have to run an own discovery enpoint behind the proxy or if possible try to bypass the proxy. On a local machine mobile tethering will do the trick.
 
 ### Future work
-Dynamic frontend and backend
+Dynamic frontend and backend deployments

@@ -47,7 +47,9 @@ end
 Vagrant.configure("2") do |config|
   # always use Vagrants insecure key
   config.ssh.insert_key = false
-   #if Vagrant.has_plugin?("vagrant-proxyconf")
+
+  # Needed if you're behind a proxy
+  #if Vagrant.has_plugin?("vagrant-proxyconf")
    #  config.proxy.http = "http://proxy.vptt.ch:80"
    #  config.proxy.https = "https://proxy.vptt.ch:80"
    #  config.proxy.no_proxy = "localhost,127.0.0.1,172.17.8.0/24"
