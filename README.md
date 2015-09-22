@@ -131,5 +131,17 @@ Then access to `example.com` and you can see the current version _2.0.0_ .
 ### Hints
 If you're sitting behind a proxy you have to run an own discovery enpoint behind the proxy or if possible try to bypass the proxy. On a local machine mobile tethering will do the trick.
 
+### pros and cons of using vulcand
+Pros:
+- Interacts directly with etcd
+- Changes don't need a restart
+- No config files needed
+Cons:
+- Still beta
+- No heavy development visible
+
+### When to use
+For loadbalancing of APIs and microservices
+
 ### Future work
 Dynamic frontend and backend deployments
