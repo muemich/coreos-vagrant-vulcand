@@ -142,7 +142,7 @@ Cons:
 - No heavy development visible
 
 ### When to use
-For loadbalancing of APIs and microservices
+In test environment with moderate load.
 
 ### Future work
 Dynamic frontend and backend deployments
