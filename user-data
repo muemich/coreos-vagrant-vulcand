@@ -1,14 +1,11 @@
 #cloud-config
 
+---
 coreos:
   etcd2:
-    #generate a new token for each unique cluster from https://discovery.etcd.io/new
-    discovery: https://discovery.etcd.io/2fbf9b881d3500e6d08b608b3fe35852
-    # multi-region and multi-cloud deployments need to use $public_ipv4
+    discovery: https://discovery.etcd.io/8d2f3ff5355e3761560646d93d82a32e
     advertise-client-urls: http://$public_ipv4:2379
     initial-advertise-peer-urls: http://$private_ipv4:2380
-    # listen on both the official ports and the legacy ports
-    # legacy ports can be omitted if your application doesn't depend on them
     listen-client-urls: http://0.0.0.0:2379,http://0.0.0.0:4001
     listen-peer-urls: http://$private_ipv4:2380,http://$private_ipv4:7001
   fleet:
@@ -16,45 +13,41 @@ coreos:
   flannel:
     interface: $public_ipv4
   units:
-    - name: etcd2.service
-      command: start
-    # To use etcd2, comment out the above service and uncomment these
-    # Note: this requires a release that contains etcd2
-    #- name: etcd2.service
-    #  command: start
-    - name: fleet.service
-      command: start
-    - name: docker-tcp.socket
-      command: start
-      enable: true
-      content: |
-        [Unit]
-        Description=Docker Socket for the API
+  - name: etcd2.service
+    command: start
+  - name: fleet.service
+    command: start
+  - name: docker-tcp.socket
+    command: start
+    enable: true
+    content: |
+      [Unit]
+      Description=Docker Socket for the API
 
-        [Socket]
-        ListenStream=2375
-        Service=docker.service
-        BindIPv6Only=both
+      [Socket]
+      ListenStream=2375
+      Service=docker.service
+      BindIPv6Only=both
 
-        [Install]
-        WantedBy=sockets.target
-    - name: vulcand.service
-      command: start
-      enable: true
-      content: |
-        [Unit]
-        Description=Vulcand
-        After=docker.service
-        Requires=docker.service
+      [Install]
+      WantedBy=sockets.target
+  - name: vulcand.service
+    command: start
+    enable: true
+    content: |
+      [Unit]
+      Description=Vulcand
+      After=docker.service
+      Requires=docker.service
 
-        [Service]
-        TimeoutStartSec=0
-        User=core
-        ExecStartPre=-/usr/bin/docker kill vulcand
-        ExecStartPre=-/usr/bin/docker rm vulcand
-        ExecStartPre=/usr/bin/docker pull mailgun/vulcand:v0.8.0-beta.3
-        ExecStart=/usr/bin/docker run --name vulcand -p 80:80 -p 443:443 -p 8182:8182 -p 8181:8181 mailgun/vulcand:v0.8.0-beta.2 /go/bin/vulcand -apiInterface=0.0.0.0 -interface=0.0.0.0 -etcd=http://$private_ipv4:4001 -port=80 -apiPort=8182
-        ExecStop=/usr/bin/docker stop vulcand
+      [Service]
+      TimeoutStartSec=0
+      User=core
+      ExecStartPre=-/usr/bin/docker kill vulcand
+      ExecStartPre=-/usr/bin/docker rm vulcand
+      ExecStartPre=/usr/bin/docker pull mailgun/vulcand:v0.8.0-beta.3
+      ExecStart=/usr/bin/docker run --name vulcand -p 80:80 -p 443:443 -p 8182:8182 -p 8181:8181 mailgun/vulcand:v0.8.0-beta.2 /go/bin/vulcand -apiInterface=0.0.0.0 -interface=0.0.0.0 -etcd=http://$private_ipv4:4001 -port=80 -apiPort=8182
+      ExecStop=/usr/bin/docker stop vulcand
 
-        [Install]
-        WantedBy=multi-user.target
+      [Install]
+      WantedBy=multi-user.target

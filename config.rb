@@ -7,32 +7,32 @@ $new_discovery_url="https://discovery.etcd.io/new?size=#{$num_instances}"
 # To automatically replace the discovery token on 'vagrant up', uncomment
 # the lines below:
 #
-#if File.exists?('user-data') && ARGV[0].eql?('up')
-#  require 'open-uri'
-#  require 'yaml'
-#
-#  token = open($new_discovery_url).read
-#
-#  data = YAML.load(IO.readlines('user-data')[1..-1].join)
-#  if data['coreos'].key? 'etcd'
-#    data['coreos']['etcd']['discovery'] = token
-#  end
-#  if data['coreos'].key? 'etcd2'
-#    data['coreos']['etcd2']['discovery'] = token
-#  end
-#
-#  # Fix for YAML.load() converting reboot-strategy from 'off' to `false`
-#  if data['coreos'].key? 'update'
-#     if data['coreos']['update'].key? 'reboot-strategy'
-#        if data['coreos']['update']['reboot-strategy'] == false
-#           data['coreos']['update']['reboot-strategy'] = 'off'
-#        end
-#     end
-#  end
-#
-#  yaml = YAML.dump(data)
-#  File.open('user-data', 'w') { |file| file.write("#cloud-config\n\n#{yaml}") }
-#end
+if File.exists?('user-data') && ARGV[0].eql?('up')
+ require 'open-uri'
+ require 'yaml'
+
+ token = open($new_discovery_url).read
+
+ data = YAML.load(IO.readlines('user-data')[1..-1].join)
+ if data['coreos'].key? 'etcd'
+   data['coreos']['etcd']['discovery'] = token
+ end
+ if data['coreos'].key? 'etcd2'
+   data['coreos']['etcd2']['discovery'] = token
+ end
+
+ # Fix for YAML.load() converting reboot-strategy from 'off' to `false`
+ if data['coreos'].key? 'update'
+    if data['coreos']['update'].key? 'reboot-strategy'
+       if data['coreos']['update']['reboot-strategy'] == false
+          data['coreos']['update']['reboot-strategy'] = 'off'
+       end
+    end
+ end
+
+ yaml = YAML.dump(data)
+ File.open('user-data', 'w') { |file| file.write("#cloud-config\n\n#{yaml}") }
+end
 #
 
 #
@@ -48,7 +48,7 @@ $new_discovery_url="https://discovery.etcd.io/new?size=#{$num_instances}"
 #$instance_name_prefix="core"
 
 # Change the version of CoreOS to be installed
-# To deploy a specific version, simply set $image_version accordingly. 
+# To deploy a specific version, simply set $image_version accordingly.
 # For example, to deploy version 709.0.0, set $image_version="709.0.0".
 # The default value is "current", which points to the current version
 # of the selected channel
